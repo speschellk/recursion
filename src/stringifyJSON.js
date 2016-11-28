@@ -5,29 +5,53 @@
 
 var stringifyJSON = function(obj) {
   // your code goes here
-  /*console.log("arguments = " + arguments.length)
-  console.log("object = " + obj);
-  console.log("type = " + typeof obj)
   var string = "";
-  // termination condition
-  if (arguments == 0) {
-    return "Give me something to work with, here.";
-  };
-  // base case
-  if (typeof obj == "string" || typeof obj == "number" || typeof obj == undefined || typeof obj == null) {
-  //if (!(key in obj)) {
-  //if (!obj.hasOwnProperty(obj)) {
-    string = String(obj);
-    console.log("Base case = " + string);
+  console.log("original obj = " + obj)
 
-  }
-  /*if (obj.hasOwnProperty(obj)) {
-    for (var key in obj) {
-      string += stringifyJSON(obj[key]);
-    };
+  // termination condition
+  if (arguments === 0) {
+    return "Give me something to work with, here!";
   };
-  return string;*/
-var string = "";
+
+  //Base cases
+  if (typeof obj === "function") {
+    string = null;
+
+  } else if (obj == undefined) {
+    string = 'null';
+
+  } else if (/*obj == undefined || */obj == null || (Object.keys(obj).length === 0 && typeof obj !== "object")) {
+    console.log("Base case")
+    string += obj;
+    console.log("string = " + string);
+
+  } else if (typeof obj === "string") {
+    console.log("String case")
+    string = '"' + obj + '"';
+    console.log("string = " + string)
+
+  // Recursive cases
+  } else if (Array.isArray(obj)) {
+    console.log("Array case")
+    string = "[" + obj.map(function(o) {return stringifyJSON(o)}).join() + "]"
+    console.log("string = " + string)
+
+  } else if (typeof obj === "object") {
+    console.log("Object case")
+    var result = []
+    Object.keys(obj).forEach(function(key) {
+      var val = stringifyJSON(obj[key])
+      if (val !== null) {
+        result.push('"' + key + '"' + ":" + val)
+      };
+    });
+    string = "{" + result.join(",") + "}";
+  };
+  console.log("returned = " + string)
+  return string;
+};
+
+/*var string = "";
 if (arguments.length === 0) {
     return "Give me something to work with";
 } else if (typeof obj === "undefined") {
@@ -70,4 +94,4 @@ if (arguments.length === 0) {
     };
   };
   return string;
-};
+};*/
