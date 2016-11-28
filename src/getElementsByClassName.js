@@ -4,23 +4,28 @@
 // };
 
 // But instead we're going to implement it from scratch:
-var getElementsByClassName = function(className) {
+var getElementsByClassName = function(className, parent, elements) {
+  if (elements == undefined) {
+    elements = [];
+  };
+  if (parent == undefined) {
+    parent = document.body;
+  };
 
-  var elements = document.querySelectorAll(".targetClassName");
+  // termination condition
+  if (arguments === 0) {
+    return "Please supply at least a class name."
+  }
 
-  //recursive function that iterates over each text node in the dom
-      //termination condition
-      if (className = undefined) {
-        return "Please enter a class name to search for.";
+  // base case
+  if (parent.classList.contains(className)) {
+    elements.push(parent);
+  }
 
-      // base case
-      } else if  {
-        // done searching through document, stop
-
-      //recursive case
-      } else {
-        getElementsByClassName('something smaller')
-      };
+  // recursive case
+  for(var i = 0; i < parent.children.length; i++) {
+    elements.concat(getElementsByClassName(className, parent.children[i], elements));
+  }
 
   return elements;
 };
