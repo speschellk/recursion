@@ -6,92 +6,47 @@
 var stringifyJSON = function(obj) {
   // your code goes here
   var string = "";
-  console.log("original obj = " + obj)
 
-  // termination condition
+  // Termination condition
   if (arguments === 0) {
     return "Give me something to work with, here!";
   };
 
-  //Base cases
+  // Base cases
   if (typeof obj === "function") {
     string = null;
 
-  } else if (obj == undefined) {
+  } else if (obj == "undefined") {
+    string = null;
+
+  } else if (obj == null) {
     string = 'null';
 
-  } else if (/*obj == undefined || */obj == null || (Object.keys(obj).length === 0 && typeof obj !== "object")) {
-    console.log("Base case")
+  } else if (typeof obj === "number" || typeof obj === "boolean") {
     string += obj;
-    console.log("string = " + string);
 
   } else if (typeof obj === "string") {
-    console.log("String case")
     string = '"' + obj + '"';
-    console.log("string = " + string)
 
   // Recursive cases
   } else if (Array.isArray(obj)) {
-    console.log("Array case")
     string = "[" + obj.map(function(o) {return stringifyJSON(o)}).join() + "]"
-    console.log("string = " + string)
 
   } else if (typeof obj === "object") {
-    console.log("Object case")
-    var result = []
+    var stringList = []
     Object.keys(obj).forEach(function(key) {
-      var val = stringifyJSON(obj[key])
-      if (val !== null) {
-        result.push('"' + key + '"' + ":" + val)
+      var value = stringifyJSON(obj[key]);
+      if (value !== null) {
+        stringList.push('"' + key + '"' + ":" + value)
       };
     });
-    string = "{" + result.join(",") + "}";
+    string = "{" + stringList.join(",") + "}";
   };
-  console.log("returned = " + string)
+  
+  // janky last check for value
+  if (string == '{"undefined":null}') {
+    return '{}'
+  } else {
   return string;
+  };
 };
-
-/*var string = "";
-if (arguments.length === 0) {
-    return "Give me something to work with";
-} else if (typeof obj === "undefined") {
-    string += "undefined";
-    console.log(obj)
-    console.log(string)
-} else if (obj === null) {
-    string += "null";
-    console.log(obj)
-    console.log(string)
-} else if (obj === false) {
-    string += "false";
-    console.log(obj)
-    console.log(string)
-} else if (obj === true) {
-    string += "true";
-    console.log(obj)
-    console.log(string)
-} else if (typeof obj === "number") {
-    string += obj;
-    console.log("number " + obj)
-    console.log(string)
-} else if (typeof obj === "string" && obj.split.length == 1) {
-    string += obj;
-    console.log("string " + obj)
-    console.log(string)
-} else if (typeof obj === "string" && obj.split.length > 1) {
-    var split = obj.split();
-    console.log(split)
-    for (var key in split) {
-      string = string.concat(split[key]);
-      console.log(string);
-    }
-
-} else {
-    for (var key in obj) {
-      console.log("keys " + obj)
-      console.log(string)
-      string += stringifyJSON(obj[key]);
-    };
-  };
-  return string;
-};*/
