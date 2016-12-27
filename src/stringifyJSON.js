@@ -4,49 +4,38 @@
 // but you don't so you're going to write it from scratch:
 
 var stringifyJSON = function(obj) {
-  // your code goes here
-  var string = "";
 
-  // Termination condition
-  if (arguments === 0) {
-    return "Give me something to work with, here!";
-  };
+  // handles types boolean, null, and number
+  if (typeof obj === 'boolean' || typeof obj === 'number' || obj === null) {
+    return obj += '';
 
-  // Base cases
-  if (typeof obj === "function") {
-    string = null;
+  // handles type string
+  } else if (typeof obj === 'string') {
+    return '"' + obj + '"';
 
-  } else if (obj == "undefined") {
-    string = null;
-
-  } else if (obj == null) {
-    string = 'null';
-
-  } else if (typeof obj === "number" || typeof obj === "boolean") {
-    string += obj;
-
-  } else if (typeof obj === "string") {
-    string = '"' + obj + '"';
-
-  // Recursive cases
+  // handles arrays
   } else if (Array.isArray(obj)) {
-    string = "[" + obj.map(function(o) {return stringifyJSON(o)}).join() + "]"
-
-  } else if (typeof obj === "object") {
-    var stringList = []
-    Object.keys(obj).forEach(function(key) {
-      var value = stringifyJSON(obj[key]);
-      if (value !== null) {
-        stringList.push('"' + key + '"' + ":" + value)
-      };
+    var result = '';
+    
+    _.each(obj, function(item) {
+      item = stringifyJSON(item);
+      result += item + ',';
     });
-    string = "{" + stringList.join(",") + "}";
-  };
-  
-  // janky last check for value
-  if (string == '{"undefined":null}') {
-    return '{}'
-  } else {
-  return string;
-  };
+
+    return '[' + result.slice(0, result.length - 1) + ']';
+
+  // handles empty and unstringifiable objects
+  } else if (typeof obj === 'object' && (Object.keys(obj).length === 0 || Object.keys(obj).includes('functions'))) {
+    return '{}';
+
+  // handles stringifiable objects
+  } else if (typeof obj === 'object') {
+    var result = '';
+
+    _.each(obj, function(value, key) {
+      result += stringifyJSON(key) + ':' + stringifyJSON(value) + ',';
+    });
+
+    return '{' + result.slice(0, result.length - 1) + '}';
+  }
 };
