@@ -4,24 +4,19 @@
 // };
 
 // But instead we're going to implement it from scratch:
-var getElementsByClassName = function(className, parent, elements) {
-  if (parent == undefined) {
-    parent = document.body;
-  };
-  if (elements == undefined) {
-    elements = [];
-  };
-  // termination condition
-  if (arguments === 0) {
-    return "Please supply a class name to search for."
-  }
+var getElementsByClassName = (className, parent, elements) => {
+  parent = parent || document.body;
+  elements = elements || [];
+
   // base case
   if (parent.classList.contains(className)) {
     elements.push(parent);
   }
+
   // recursive case
-  for(var i = 0; i < parent.children.length; i++) {
-    elements.concat(getElementsByClassName(className, parent.children[i], elements));
-  }
+  _.each(parent.children, (child) => {
+    elements.concat(getElementsByClassName(className, child, elements));
+  });
+
   return elements;
 };
