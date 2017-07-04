@@ -4,55 +4,40 @@
 // but you don't so you're going to write it from scratch:
 
 const stringifyJSON = (obj) => {
-
-  switch(checkType(obj)) {
-    case 'boolean':
-    case 'number':
-    case 'null':
-      return obj += '';
-      break;
-    case 'string':
-      return `"${obj}"`;
-      break;
-    case 'unstring':
-      return '{}';
-      break;
-    case 'array':
-      return `[${obj.map((item) => {
-        return stringifyJSON(item);
-      }).join(',')}]`;
-      break;
-    case 'object':
-      let results = [];
-      _.each(obj, function(value, key) {
-        results.push(`${stringifyJSON(key)}:${stringifyJSON(value)}`);
-      });
-      return `{${results.join(',')}}`
+  if (typeof obj === 'boolean' || typeof obj === 'number' || obj === null) { 
+    return stringifyPrimitive(obj);
+  } else if (typeof obj === 'string') {
+    return stringifyString(obj);
+  } else if (Array.isArray(obj)) {
+    return stringifyArray(obj);
+  } else if (!Object.keys(obj).length || Object.keys(obj).includes('functions')) {
+    return '{}';
+  } else {
+    return stringifyObject(obj);
   }
 };
 
 
-const checkType = (obj) => {
-  let type = typeof obj;
+const stringifyPrimitive = (prim) => {
+  return prim += '';
+};
 
-  if (typeof obj === 'boolean') {
-    type = 'boolean';
-  } else if (typeof obj === 'number') {
-    type = 'number';
-  } else if (obj === null) { 
-    type = 'null';
-  } else if (typeof obj === 'string') { 
-    type = 'string'; 
-  } else if (Array.isArray(obj)) { 
-    type = 'array';
-  } else {
-    type = 'object';
-    let keys = Object.keys(obj);
-    if (!keys.length || keys.includes('functions')) {
-      type = 'unstring';
-    }
-  }
+const stringifyString = (str) => {
+  return `"${str}"`;
+}
 
-  return type;
+const stringifyArray = (array) => {
+  return `[${array.map((item) => {
+    return stringifyJSON(item);
+  }).join(',')}]`;
+};
+
+const stringifyObject = (obj) => {
+  let results = [];
+  _.each(obj, (value, key) => {
+    results.push(`${stringifyJSON(key)}:${stringifyJSON(value)}`);
+  });
+
+  return `{${results.join(',')}}`
 };
 
