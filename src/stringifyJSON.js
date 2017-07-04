@@ -38,6 +38,6 @@ const stringifyObject = (obj) => {
     results.push(`${stringifyJSON(key)}:${stringifyJSON(value)}`);
   });
 
-  return `{${results.join(',')}}`
+  return `{${results.join(',')}}`;
 };
 
